@@ -1,4 +1,7 @@
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.JsonWebTokens;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Controllers;
 
@@ -14,30 +17,46 @@ public class DefaultController : ControllerBase
     }
 
     [HttpPost]
-    [Route("/connect")]
-    public string Connect()
+    [Route("")]
+    public async Task<ActionResult<string>> Any()
     {
-        return "Connected!";
+        var audience = AudienceBuilder("device1");
+        var token = GenerateToken(audience);
+
+        using (var client = new HttpClient())
+        {
+            _logger.LogInformation("starting request");
+            var url = audience + "?api-version=2022-22-01";
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+            var httpContent = new StringContent("It works!");
+            var response = await client.PostAsync(url, httpContent);
+            _logger.LogInformation("response: " + response);
+        }
+        
+        return "success!";
     }
 
-    [HttpPost]
-    [Route("/message")]
-    public string Message()
+    private string AudienceBuilder (string deviceName)
     {
-        return "Message received!";
+        string endpointPrefix = "https://default-pubsub.webpubsub.azure.com/api/hubs/hub1/users/";
+        string endpointSuffix = "/:send";
+        return endpointPrefix + deviceName + endpointSuffix;
     }
 
-    [HttpPost]
-    [Route("/disconnect")]
-    public string Disconnect()
+    private string GenerateToken(string audience)
     {
-        return "Disconnected!";
-    }
+        var mySecret = "IsRVALjDuxlFe1OJ2twrv/8Coeos1HQgaYvMlaE9q5U=";
+        var mySecurityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(mySecret));
 
-    [HttpPost]
-    [Route("/")]
-    public string Any()
-    {
-        return "Working!";
+        var tokenHandler = new JsonWebTokenHandler();
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Expires = DateTime.UtcNow.AddDays(7),
+            Audience = audience,
+            SigningCredentials = new SigningCredentials(mySecurityKey, SecurityAlgorithms.HmacSha256Signature)
+        };
+
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+        return token;
     }
 }
