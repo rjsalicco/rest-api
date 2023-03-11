@@ -33,6 +33,7 @@ public class DefaultController : ControllerBase
             _logger.LogInformation("response: " + response);
         }
         
+        Response.Headers.Add("WebHook-Allowed-Origin", "*");
         return "success!";
     }
 
