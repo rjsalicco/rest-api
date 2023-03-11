@@ -17,6 +17,7 @@ public class DefaultController : ControllerBase
     }
 
     [HttpPost]
+    [HttpOptions]
     [Route("")]
     public async Task<ActionResult<string>> Any()
     {
