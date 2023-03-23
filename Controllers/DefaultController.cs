@@ -17,6 +17,7 @@ public class DefaultController : ControllerBase
     }
 
     [HttpGet]
+    [HttpPost]
     [HttpOptions]
     [Route("connect")]
     public async Task<ActionResult<string>> Connect()
