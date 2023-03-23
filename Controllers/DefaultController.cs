@@ -1,3 +1,4 @@
+using System.Net;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.JsonWebTokens;
@@ -20,13 +21,13 @@ public class DefaultController : ControllerBase
     [HttpPost]
     [HttpOptions]
     [Route("connect")]
-    public async Task<ActionResult<string>> Connect()
+    public ActionResult<string> OnConnect()
     {
         Guid myGuid = Guid.NewGuid();
         Response.Headers.Add("WebHook-Allowed-Origin", "*");
         return myGuid.ToString();
     }
-       
+
 
     [HttpPost]
     [HttpOptions]
