@@ -16,6 +16,17 @@ public class DefaultController : ControllerBase
         _logger = logger;
     }
 
+    [HttpGet]
+    [HttpOptions]
+    [Route("connect")]
+    public async Task<ActionResult<string>> Connect()
+    {
+        Guid myGuid = Guid.NewGuid();
+        Response.Headers.Add("WebHook-Allowed-Origin", "*");
+        return myGuid.ToString();
+    }
+       
+
     [HttpPost]
     [HttpOptions]
     [Route("")]
