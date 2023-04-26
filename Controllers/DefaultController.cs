@@ -23,7 +23,8 @@ public class DefaultController : ControllerBase
     [Route("validate")]
     public ActionResult<string> OnValidate()
     {
-        Guid myGuid = Guid.NewGuid();
+        _logger.LogInformation("OnValidate invoked....");
+        Guid myGuid = Guid.NewGuid();   
         Response.Headers.Add("WebHook-Allowed-Origin", "*");
         return myGuid.ToString();
     }
@@ -34,6 +35,7 @@ public class DefaultController : ControllerBase
     [Route("connect")]
     public ActionResult<string> OnConnect()
     {
+        _logger.LogInformation("OnConnect invoked....");
         Guid myGuid = Guid.NewGuid();
         Response.Headers.Add("WebHook-Allowed-Origin", "*");
         return myGuid.ToString();
@@ -45,6 +47,8 @@ public class DefaultController : ControllerBase
     [Route("")]
     public async Task<ActionResult<string>> Any()
     {
+        _logger.LogInformation("Any invoked....");
+
         var audience = AudienceBuilder("device1");
         var token = GenerateToken(audience);
 
@@ -71,7 +75,7 @@ public class DefaultController : ControllerBase
 
     private string GenerateToken(string audience)
     {
-        var mySecret = "IsRVALjDuxlFe1OJ2twrv/8Coeos1HQgaYvMlaE9q5U=";
+        var mySecret = "ooEojJdonmnywyD/HsbyR4mgaP0JhVNpmzhle9F0F3U=";
         var mySecurityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(mySecret));
 
         var tokenHandler = new JsonWebTokenHandler();
