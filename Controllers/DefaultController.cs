@@ -20,6 +20,17 @@ public class DefaultController : ControllerBase
     [HttpGet]
     [HttpPost]
     [HttpOptions]
+    [Route("validate")]
+    public ActionResult<string> OnValidate()
+    {
+        Guid myGuid = Guid.NewGuid();
+        Response.Headers.Add("WebHook-Allowed-Origin", "*");
+        return myGuid.ToString();
+    }
+
+    [HttpGet]
+    [HttpPost]
+    [HttpOptions]
     [Route("connect")]
     public ActionResult<string> OnConnect()
     {
