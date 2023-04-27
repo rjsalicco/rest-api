@@ -49,7 +49,11 @@ public class DefaultController : ControllerBase
     {
         _logger.LogInformation("Any invoked....");
 
-        var audience = AudienceBuilder("device1");
+        Request.EnableBuffering();
+        Request.Body.Position = 0;
+        var userId = await new StreamReader(Request.Body).ReadToEndAsync();
+
+        var audience = AudienceBuilder(userId);
         var token = GenerateToken(audience);
 
         using (var client = new HttpClient())
@@ -68,7 +72,7 @@ public class DefaultController : ControllerBase
 
     private string AudienceBuilder (string deviceName)
     {
-        string endpointPrefix = "https://default-pubsub.webpubsub.azure.com/api/hubs/hub1/users/";
+        string endpointPrefix = "https://rj-demo.webpubsub.azure.com/api/hubs/default/users/";
         string endpointSuffix = "/:send";
         return endpointPrefix + deviceName + endpointSuffix;
     }
