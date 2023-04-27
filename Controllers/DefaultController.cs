@@ -23,22 +23,20 @@ public class DefaultController : ControllerBase
     [Route("validate")]
     public ActionResult<string> OnValidate()
     {
-        _logger.LogInformation("OnValidate invoked....");
-        Guid myGuid = Guid.NewGuid();   
+        _logger.LogInformation("OnValidate invoked...."); 
         Response.Headers.Add("WebHook-Allowed-Origin", "*");
-        return myGuid.ToString();
+        return "";
     }
 
     [HttpGet]
     [HttpPost]
     [HttpOptions]
-    [Route("connect")]
-    public ActionResult<string> OnConnect()
+    [Route("connected")]
+    public ActionResult<string> OnConnected(string? connectionId)
     {
         _logger.LogInformation("OnConnect invoked....");
-        Guid myGuid = Guid.NewGuid();
         Response.Headers.Add("WebHook-Allowed-Origin", "*");
-        return myGuid.ToString();
+        return connectionId;
     }
 
 
