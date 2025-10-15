@@ -1,2 +1,2 @@
 # rest-api
-Dotnet REST API
+Demo DotNET REST API
